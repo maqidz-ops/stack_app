@@ -1,6 +1,8 @@
-# flutter_application_1
+# Stack Mobile Apps
 
-A new Flutter project.
+Stack is a smart subscription tracker app that helps users manage recurring payments, monitor upcoming renewals, and gain better control over their monthly spending.
+
+Figma File ([text](https://www.figma.com/design/7XfHMII64S9KW9SAl3bxPj/STACK---MOBILE-APP?node-id=0-1&t=BzF28gV6Nf9JSzcT-1))
 
 ## Getting Started
 
