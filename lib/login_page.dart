@@ -39,7 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF09090B), // Latar belakang 
+      backgroundColor: const Color(0xFF0A0A0A), // Latar belakang 
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -55,14 +55,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 100,
                 ),
               ),
-              const SizedBox(height: 60),
+              const SizedBox(height: 20),
 
               // Toggle Tab (Sign Up / Sign In)
               Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1C1C1E),
+                  color: const Color(0xFF17181A),
                   borderRadius: BorderRadius.circular(30),
+                  border: Border.all(color: const Color(0xFF292D32), width: 1),
                 ),
                 child: Row(
                   children: [
@@ -79,6 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             'Sign Up',
                             textAlign: TextAlign.center,
                             style: TextStyle(
+                              fontSize: 16,
                               color: _isSignUp ? Colors.black : Colors.grey,
                               fontWeight: FontWeight.bold,
                             ),
@@ -99,6 +101,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             'Sign In',
                             textAlign: TextAlign.center,
                             style: TextStyle(
+                              fontSize: 16,
                               color: !_isSignUp ? Colors.black : Colors.grey,
                               fontWeight: FontWeight.bold,
                             ),
@@ -127,7 +130,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   prefixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
                   filled: true,
-                  fillColor: const Color(0xFF1C1C1E),
+                  fillColor: const Color(0xFF17181A),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide.none,
@@ -161,7 +164,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onPressed: () => setState(() => _obscureText = !_obscureText),
                   ),
                   filled: true,
-                  fillColor: const Color(0xFF1C1C1E),
+                  fillColor: const Color(0xFF17181A),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide.none,
@@ -177,7 +180,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   onPressed: () {},
                   child: const Text(
                     'Forgot password?',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
               ),
@@ -189,7 +192,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 20),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
@@ -199,7 +202,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
             ],
           ),
         ),
