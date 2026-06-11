@@ -63,7 +63,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 decoration: BoxDecoration(
                   color: const Color(0xFF17181A),
                   borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: const Color(0xFF292D32), width: 1),
                 ),
                 child: Row(
                   children: [
