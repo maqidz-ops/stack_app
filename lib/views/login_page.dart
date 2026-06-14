@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const SignUpScreen(),
     );
@@ -35,6 +35,24 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   bool _isSignUp = true;
   bool _obscureText = true;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  String? _emailErrorText;
+  String? _passwordErrorText;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +133,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
               // Input Email
               TextField(
+                controller: _emailController,
                 style: const TextStyle(color: Colors.white),
+                onChanged: (value) {
+                  if (_emailErrorText != null && value.isNotEmpty) {
+                    setState(() => _emailErrorText = null);
+                  }
+                },
                 decoration: InputDecoration(
                   hintText: 'example@gmail.com',
                   hintStyle: const TextStyle(color: Colors.grey),
@@ -136,39 +160,72 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
+              if (_emailErrorText != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 16.0),
+                  child: Text(
+                    _emailErrorText!,
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
               const SizedBox(height: 16),
 
               // Input Password
-              TextField(
-                obscureText: _obscureText,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: 'Password',
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Image.asset(
-                      'lib/asset/icon_password.png',
-                      width: 24,
-                      height: 24,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: _passwordController,
+                    obscureText: _obscureText,
+                    style: const TextStyle(color: Colors.white),
+                    onChanged: (value) {
+                      if (_passwordErrorText != null) {
+                        setState(() => _passwordErrorText = null);
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Image.asset(
+                          'lib/asset/icon_password.png',
+                          width: 24,
+                          height: 24,
+                        ),
+                      ),
+                      prefixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+                      suffixIcon: IconButton(
+                        icon: Image.asset(
+                          _obscureText ? 'lib/asset/icon_eye_slash.png' : 'lib/asset/icon_eye.png',
+                          width: 24,
+                          height: 24,
+                        ),
+                        onPressed: () => setState(() => _obscureText = !_obscureText),
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFF17181A),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
-                  prefixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-                  suffixIcon: IconButton(
-                    icon: Image.asset(
-                      _obscureText ? 'lib/asset/icon_eye_slash.png' : 'lib/asset/icon_eye.png',
-                      width: 24,
-                      height: 24,
+                  if (_passwordErrorText != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0, left: 16.0),
+                      child: Text(
+                        _passwordErrorText!,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
-                    onPressed: () => setState(() => _obscureText = !_obscureText),
-                  ),
-                  filled: true,
-                  fillColor: const Color(0xFF17181A),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
+                ],
               ),
               const SizedBox(height: 12),
 
@@ -187,7 +244,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
               // Tombol Submit Utama (Sign Up / Sign In)
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    _emailErrorText = null;
+                    _passwordErrorText = null;
+
+                    if (_emailController.text.isEmpty) {
+                      _emailErrorText = 'Email is required';
+                    }
+
+                    if (_passwordController.text.isEmpty) {
+                      _passwordErrorText = 'Password is required';
+                    } else if (_passwordController.text.length < 8) {
+                      _passwordErrorText = 'Password must be at least 8 characters';
+                    }
+                  });
+
+                  if (_emailErrorText == null && _passwordErrorText == null) {
+                    // Proceed with sign up/sign in logic
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
