@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import '../model/users_model.dart';
 
 class UsersController {
-
   static const String url =
       "https://6a43cfa66dba791499ab71bb.mockapi.io/users";
 
