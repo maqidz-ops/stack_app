@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:device_preview/device_preview.dart';
 import '../utils/local_storage.dart';
 
-void main() {
-  runApp(
-    DevicePreview(
-      enabled: true,
-      builder: (context) => 
-      const HomePage(),
-    ),
-  );
-}
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -116,7 +106,8 @@ class HomePageState extends State<HomePage> {
               const SizedBox(height: 24),
 
               // Greeting Section
-
+              
+              
               const SizedBox(height: 20,),
 
               // Upcoming Subscriptions Section
@@ -129,7 +120,7 @@ class HomePageState extends State<HomePage> {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
               SizedBox(
                 height: 130,
@@ -137,18 +128,21 @@ class HomePageState extends State<HomePage> {
                   scrollDirection: Axis.horizontal,
                   children: const [
                     UpcomingCard(
-                      title: "Technologies",
-                      price: "\$1,745",
+                      logoAsset: "lib/asset/logo_paper.png",
+                      date: "29 Jun 2026",
+                      price: "\$25",
                     ),
-                    SizedBox(width: 14),
+                    SizedBox(width: 12),
                     UpcomingCard(
-                      title: "Platform",
-                      price: "\$1,745",
+                      logoAsset: "lib/asset/logo_claude.png",
+                      date: "29 Jun 2026",
+                      price: "\$20",
                     ),
-                    SizedBox(width: 14),
+                    SizedBox(width: 12),
                     UpcomingCard(
-                      title: "Services",
-                      price: "\$1,745",
+                      logoAsset: "lib/asset/logo_paper.png",
+                      date: "29 Jun 2026",
+                      price: "\$20",
                     ),
                   ],
                 ),
@@ -166,27 +160,47 @@ class HomePageState extends State<HomePage> {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
               SubscriptionCard(
                 logoAsset: "lib/asset/logo_paper.png",
                 color: const Color(0xFF81ACEC),
                 title: "Paper Pro",
-                date: "17 Aug 2024",
-                price: "\$25/m",
+                date: "29 Jun 2026",
+                price: "\$16/m",
+                onTap: () => showSubscriptionDetails(
+                  context,
+                  title: 'Paper Pro',
+                  price: '\$25/month',
+                  billing: 'Monthly',
+                  nextPayment: '29 Jun 2026',
+                  totalSpent: '\$16',
+                  subscribed: '3 days',
+                  category: 'Tools',
+                ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
               SubscriptionCard(
                 logoAsset: "lib/asset/logo_claude.png",
                 color: const Color(0xFFDA7757),
                 title: "Claude Pro",
-                date: "17 Aug 2024",
-                price: "\$25/m",
+                date: "29 Jun 2026",
+                price: "\$20/m",
+                onTap: () => showSubscriptionDetails(
+                  context,
+                  title: 'Claude Pro',
+                  price: '\$25/month',
+                  billing: 'Monthly',
+                  nextPayment: '29 Jun 2026',
+                  totalSpent: '\$20',
+                  subscribed: '3 days',
+                  category: 'Tools',
+                ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
 
               Align(
                 alignment: AlignmentGeometry.bottomCenter,
@@ -212,19 +226,22 @@ class HomePageState extends State<HomePage> {
 }
 
 class UpcomingCard extends StatelessWidget {
-  final String title;
   final String price;
+  final String date;
+  final String? logoAsset;
 
   const UpcomingCard({
     super.key,
-    required this.title,
     required this.price,
+    required this.date,
+    this.logoAsset,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 160,
+      height: 124,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: const Color(0xFF17181A),
@@ -234,27 +251,35 @@ class UpcomingCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 32,
-            height: 32,
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
-              color: Colors.grey.shade800,
+              color: const Color(0xFF17181A),
               borderRadius: BorderRadius.circular(12),
             ),
+            child: logoAsset != null
+                ? Image.asset(
+                    logoAsset!,
+                    width: 32,
+                    height: 32,
+                  )
+                : null,
           ),
           const Spacer(),
+
           Text(
             price,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
             ),
           ),
           Text(
-            title,
+            date,
             style: TextStyle(
               color: Colors.grey.shade500,
-              fontSize: 16,
+              fontSize: 14,
             ),
           ),
         ],
@@ -269,6 +294,7 @@ class SubscriptionCard extends StatelessWidget {
   final String date;
   final String price;
   final String? logoAsset;
+  final VoidCallback? onTap;
 
   const SubscriptionCard({
     super.key,
@@ -277,81 +303,204 @@ class SubscriptionCard extends StatelessWidget {
     required this.date,
     required this.price,
     this.logoAsset,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 90,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF17181A),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(16),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 90,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF17181A),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                color: const Color(0xFF17181A),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: logoAsset != null
+                  ? Image.asset(
+                      logoAsset!,
+                      width: 32,
+                      height: 32,
+                    )
+                  : null,
             ),
-            child: logoAsset != null
-                ? Image.asset(
-                    logoAsset!,
-                    width: 32,
-                    height: 32,
-                  )
-                : null,
-          ),
 
-          const SizedBox(width: 14),
+            const SizedBox(width: 14),
 
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Image.asset(
-                      "lib/asset/calendar-2.png",
-                      width: 16,
-                      height: 16,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
-                    const SizedBox(width: 5),
-                    Text(
-                      date,
-                      style: TextStyle(
-                        color: Colors.grey.shade500,
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Image.asset(
+                        "lib/asset/calendar-2.png",
+                        width: 16,
+                        height: 16,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        date,
+                        style: TextStyle(
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            Text(
+              price,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+void showSubscriptionDetails(
+  BuildContext context, {
+  required String title,
+  required String price,
+  required String billing,
+  required String nextPayment,
+  required String totalSpent,
+  required String subscribed,
+  required String category,
+}) {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true,
+    builder: (c) {
+      return DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.5,
+        minChildSize: 0.3,
+        maxChildSize: 0.9,
+        builder: (_, controller) {
+          return Container(
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              color: Color(0xFF0A0A0A),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(24),
+                topRight: Radius.circular(24),
+              ),
+            ),
+            child: ListView(
+              controller: controller,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF17181A),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Text(
+                          title.split(' ').map((e) => e[0]).join(),
+                          style: const TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            price,
+                            style: TextStyle(color: Colors.grey.shade400),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
+                const SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF17181A),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+                  child: Column(
+                    children: [
+                      _detailRow('Billing', billing),
+                      const SizedBox(height: 12),
+                      _detailRow('Next payment', nextPayment),
+                      const SizedBox(height: 12),
+                      _detailRow('Total spent', totalSpent),
+                      const SizedBox(height: 12),
+                      _detailRow('Subscribed', subscribed),
+                      const SizedBox(height: 12),
+                      _detailRow('Category', category),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
+          );
+        },
+      );
+    },
+  );
+}
 
-          Text(
-            price,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
+Widget _detailRow(String label, String value) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        label,
+        style: const TextStyle(color: Colors.white, fontSize: 16),
       ),
-    );
-  }
+      Text(
+        value,
+        style: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+      ),
+    ],
+  );
 }

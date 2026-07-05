@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:device_preview/device_preview.dart';
 import '../utils/local_storage.dart';
 import 'package:flutter_application_1/utils/notification.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -8,16 +7,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'home_page.dart';
 
-
-void main() {
-  runApp(
-    DevicePreview(
-      enabled: true,
-      builder: (context) => 
-      const MyApp(),
-    ),
-  );
-}
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
