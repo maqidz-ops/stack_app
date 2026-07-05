@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:device_preview/device_preview.dart';
+import '../utils/local_storage.dart';
+import 'package:flutter_application_1/utils/notification.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'home_page.dart';
 
-void main() {
-  runApp(
-    DevicePreview(
-      enabled: true,
-      builder: (context) => 
-      const MyApp(),
-    ),
-  );
-}
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -52,6 +49,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> login() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    try {
+      final response = await http.get(
+        Uri.parse("https://6a43cfa66dba791499ab71bb.mockapi.io/users?email=$email&password=$password",
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data.isNotEmpty) {
+          // Storage
+          await saveRole();
+          // Local Notification
+          if (!kIsWeb) {
+            await NotificationService.plugin.show(
+            id: 0,
+            title: 'Login Success',
+            body: 'You are now logged in.',
+            notificationDetails: const NotificationDetails(
+              android: AndroidNotificationDetails(
+                'basic_channel',
+                'Basic Notifications',
+                channelDescription: 'Notifications for login events',
+                importance: Importance.max,
+                priority: Priority.high,
+              ),
+            ),
+          );
+          }
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Login Success"),
+            ),
+          );
+          // pindah halaman
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+          
+        } else {
+          // Login gagal
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Username atau Password salah"),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Error handling
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+    }
   }
 
   @override
@@ -244,7 +305,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
               // Tombol Submit Utama (Sign Up / Sign In)
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   setState(() {
                     _emailErrorText = null;
                     _passwordErrorText = null;
@@ -262,6 +323,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                   if (_emailErrorText == null && _passwordErrorText == null) {
                     // Proceed with sign up/sign in logic
+                    await login();
                   }
                 },
                 style: ElevatedButton.styleFrom(
