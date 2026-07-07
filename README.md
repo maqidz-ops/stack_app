@@ -1,28 +1,34 @@
 # Stack Mobile Apps
-
 Stack is a smart subscription tracker app that helps users manage recurring payments, monitor upcoming renewals, and gain better control over their monthly spending.
 
 ## Features
 - User Authentication (Login)
 - Dashboard Subscription
-- Local Notification Reminder
+- Local Notification
 - REST API Integration
-- Local Storage Support
+- State Management
+- Local Storage
 
 ## Design
-
-[Figma File](https://www.figma.com/design/7XfHMII64S9KW9SAl3bxPj/STACK---MOBILE-APP?node-id=0-1&t=BzF28gV6Nf9JSzcT-1)
+Here's the design file:
+[STACK MOBILE APP](https://www.figma.com/design/7XfHMII64S9KW9SAl3bxPj/STACK---MOBILE-APP?node-id=0-1&t=BzF28gV6Nf9JSzcT-1)
 
 ## Installation
 Clone this repository:
+```bash
 git clone https://github.com/maqidz-ops/stack_app.git
 cd stack_app
+```
 
 Install dependecies:
+```bash
 flutter pub get
+```
 
 Run the application:
+```bash
 flutter run
+```
 
 ## Tech Stack
 - Flutter
