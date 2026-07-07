@@ -39,6 +39,9 @@ flutter run
 - Flutter Local Notifications
 - Local Storage
 
+## Screenshots
+![Preview](media/preview_app.png)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
