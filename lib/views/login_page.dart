@@ -1,26 +1,9 @@
 import 'package:flutter/material.dart';
-import '../utils/local_storage.dart';
-import 'package:flutter_application_1/utils/notification.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter/foundation.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
+import '../providers/login_provider.dart';
 import 'home_page.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const SignUpScreen(),
-    );
-  }
-}
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -54,63 +37,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> login() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
+    final loginProvider = context.read<LoginProvider>();
 
-    try {
-      final response = await http.get(
-        Uri.parse("https://6a43cfa66dba791499ab71bb.mockapi.io/users?email=$email&password=$password",
-        ),
+    final success = await loginProvider.login(email: email, password: password);
+
+    if (!mounted) return;
+
+    if (success) {
+      final userEmail = loginProvider.user?.email ?? email;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login Success')),
       );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        if (data.isNotEmpty) {
-          // Storage
-          await saveRole();
-          // Local Notification
-          if (!kIsWeb) {
-            await NotificationService.plugin.show(
-            id: 0,
-            title: 'Login Success',
-            body: 'You are now logged in.',
-            notificationDetails: const NotificationDetails(
-              android: AndroidNotificationDetails(
-                'basic_channel',
-                'Basic Notifications',
-                channelDescription: 'Notifications for login events',
-                importance: Importance.max,
-                priority: Priority.high,
-              ),
-            ),
-          );
-          }
-          
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Login Success"),
-            ),
-          );
-          // pindah halaman
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );
-          
-        } else {
-          // Login gagal
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Username atau Password salah"),
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      // Error handling
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage(email: userEmail)),
+      );
+    } else {
+      final message = loginProvider.error ?? 'Username atau Password salah';
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
+        SnackBar(content: Text(message)),
       );
     }
   }
